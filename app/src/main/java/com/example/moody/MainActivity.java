@@ -7,12 +7,14 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.moody.fragments.DiaryFragment;
 import com.example.moody.fragments.HomeFragment;
 import com.example.moody.fragments.LocationFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
         //setting home fragment as main fragment
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fl_wrapper, new HomeFragment()).commit();
+    }
+
+    //logout
+    public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(),Login.class)); //return to login activity
+        finish();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new

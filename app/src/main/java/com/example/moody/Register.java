@@ -1,35 +1,88 @@
 package com.example.moody;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+
 public class Register extends AppCompatActivity {
-    EditText fullName, email, password, phoneNumber;
-    Button registerBtn;
-    TextView loginBtn;
-    FirebaseAuth auth;
-    ProgressBar progressBar;
+
+    EditText rFullName, rEmail, rPassword, rPhoneNumber;
+    Button rRegisterBtn;
+    TextView rLoginBtn;
+    FirebaseAuth rAuth;
+    ProgressBar progressbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        fullName = findViewById(R.id.fullName);
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
-        phoneNumber = findViewById(R.id.phoneNumber);
-        registerBtn = findViewById(R.id.buttonRegis);
-        loginBtn = findViewById(R.id.createText);
+        rFullName = findViewById(R.id.fullName);
+        rEmail = findViewById(R.id.email);
+        rPassword = findViewById(R.id.password);
+        rPhoneNumber = findViewById(R.id.phoneNumber);
+        rRegisterBtn = findViewById(R.id.buttonRegis);
+        rLoginBtn = findViewById(R.id.createText);
 
-        auth = FirebaseAuth.getInstance();
-        progressBar = findViewById(R.id.progressBar);
+        rAuth = FirebaseAuth.getInstance();
+        progressbar = findViewById(R.id.progressBar);
+
+        if(rAuth.getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
+
+        rRegisterBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String email = rEmail.getText().toString().trim();
+                String password = rPassword.getText().toString().trim();
+
+                if(TextUtils.isEmpty(email)) {
+                    rEmail.setError("Email is verplicht");
+                    return;
+                }
+                if(TextUtils.isEmpty(password)) {
+                    rPassword.setError("Password is verplicht");
+                    return;
+                }
+                if(password.length() < 6) {
+                    rPassword.setError("Wachtwoord moet langer dan 6 karakters");
+                    return;
+                }
+
+                progressbar.setVisibility(View.VISIBLE);
+
+                //register the user in firebase
+
+                rAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(Register.this, "Gebruiker aangemaakt", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        } else {
+                            Toast.makeText(Register.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                );
+            }
+        });
     }
 }
