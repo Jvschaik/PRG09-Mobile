@@ -42,26 +42,26 @@ public class Register extends AppCompatActivity {
         rAuth = FirebaseAuth.getInstance();
         progressbar = findViewById(R.id.progressBar);
 
-        if(rAuth.getCurrentUser() != null) {
+        if (rAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
 
-        rRegisterBtn.setOnClickListener(new View.OnClickListener(){
+        rRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = rEmail.getText().toString().trim();
                 String password = rPassword.getText().toString().trim();
 
-                if(TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email)) {
                     rEmail.setError("Email is verplicht");
                     return;
                 }
-                if(TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {
                     rPassword.setError("Password is verplicht");
                     return;
                 }
-                if(password.length() < 6) {
+                if (password.length() < 6) {
                     rPassword.setError("Wachtwoord moet langer dan 6 karakters");
                     return;
                 }
@@ -70,18 +70,25 @@ public class Register extends AppCompatActivity {
 
                 //register the user in firebase
 
-                rAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                rAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             Toast.makeText(Register.this, "Gebruiker aangemaakt", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
                             Toast.makeText(Register.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            progressbar.setVisibility(View.GONE);
                         }
                     }
-                }
-                );
+                });
+            }
+        });
+
+        rLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
     }
