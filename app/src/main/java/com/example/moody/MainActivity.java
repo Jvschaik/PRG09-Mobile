@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
-import com.example.moody.fragments.DiaryFragment;
 import com.example.moody.fragments.HomeFragment;
 import com.example.moody.fragments.LocationFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -51,10 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
                         case R.id.ic_location:
                             selectedFragment = new LocationFragment();
-                            break;
-
-                        case R.id.ic_diary:
-                            selectedFragment = new DiaryFragment();
                             break;
                     }
                     getSupportFragmentManager().beginTransaction()
