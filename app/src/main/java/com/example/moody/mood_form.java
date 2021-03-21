@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,42 +51,28 @@ public class mood_form extends AppCompatActivity {
 
         Diary diary = new Diary( firstInput, secondInput);
 
-        db.collection("Diary").document("My mood diary").set(diary).addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.collection("Diary").add(diary).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(mood_form.this, "Succesvol opgeslagen", Toast.LENGTH_SHORT).show();
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(mood_form.this, "Er is iets fout gegaan!", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, e.toString());
-                    }
-                });
+        });
     }
 
     public void load(View v) {
-        db.collection("Diary").document("My mood diary").get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            Diary diary = documentSnapshot.toObject(Diary.class);
-
-                            String first = diary.getFirst();
-                            String second = diary.getSecond();
-
-                            viewData.setText("Wat ging er goed: " + first + "\n" + "Wat kan er morgen beter: " + second);
-                        } else {
-                            Toast.makeText(mood_form.this, "Sorry, dit bestaat niet!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+        db.collection("Diary").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(mood_form.this, "Er gaat iets mis!", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, e.toString());
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                String data = "";
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    Diary diary = documentSnapshot.toObject(Diary.class);
+
+                    String first = diary.getFirst();
+                    String second = diary.getSecond();
+
+                    data += "Wat ging er goed: " + first + "\nWat kan er beter: " + second + "\n\n";
+                }
+                viewData.setText(data);
             }
         });
     }
