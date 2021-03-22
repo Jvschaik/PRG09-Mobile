@@ -16,8 +16,6 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-//        Toast.makeText(context, "Geofence triggered", Toast.LENGTH_SHORT).show();
-
         NotificationHelper notificationHelper = new NotificationHelper(context);
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 

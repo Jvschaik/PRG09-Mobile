@@ -101,25 +101,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(requestCode == BACKGROUND_LOCATION_ACCESS_REQUEST_CODE) {
             if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
 //                We have permission
-                Toast.makeText(this, "You can add geofence", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Je kunt Geofece toevoegen!", Toast.LENGTH_SHORT).show();
             } else {
 //                We don't have permission
-                Toast.makeText(this, "Background location access is necessary for geofences", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Achtergrond locatie is nodig voor Geofence!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-
-//          mMap.clear();
-//        addMarker(latLng);
-//        addCircle(latLng, GEOFENCE_RADIUS);
-
+//      Version higher than 29, ask permission
         if (Build.VERSION.SDK_INT >= 29) {
 //            We need to use the background location permission
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                tryAddingGeofence(latLng);
+                handleMapLongClick(latLng);
             } else {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
 //                    Shows a dialog to ask for permission
@@ -129,11 +125,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         } else {
-            tryAddingGeofence(latLng);
+            handleMapLongClick(latLng);
         }
     }
 
-    private void tryAddingGeofence(LatLng latLng) {
+    private void handleMapLongClick(LatLng latLng) {
         mMap.clear();
         addMarker(latLng);
         addCircle(latLng, GEOFENCE_RADIUS);

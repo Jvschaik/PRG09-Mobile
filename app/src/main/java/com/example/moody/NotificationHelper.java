@@ -18,8 +18,6 @@ import java.util.Random;
 
 public class NotificationHelper extends ContextWrapper {
 
-    private static final String TAG = "NotificationHelper";
-
     public NotificationHelper(Context base) {
         super(base);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -48,8 +46,6 @@ public class NotificationHelper extends ContextWrapper {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setContentTitle(title)
-//                .setContentText(body)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
