@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.moody.MapsActivity;
 import com.example.moody.R;
 import com.example.moody.mood_form;
 
@@ -29,6 +30,7 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     Button button;
+    Button maps;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -69,9 +71,16 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         button = (Button) v.findViewById(R.id.button);
+        maps = (Button) v.findViewById(R.id.maps);
+
 
         button.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), mood_form.class);
+            startActivity(intent);
+        });
+
+        maps.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), MapsActivity.class);
             startActivity(intent);
         });
         return v;
